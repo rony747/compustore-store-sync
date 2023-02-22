@@ -123,6 +123,11 @@ class Compustore_Data_Sync {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-compustore-data-sync-public.php';
 
+		/**
+		 * The class responsible for map stores sync
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/inc/class-compustore-data-sync-store.php';
+
 
 		$this->loader = new Compustore_Data_Sync_Loader();
 
@@ -155,13 +160,13 @@ class Compustore_Data_Sync {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Compustore_Data_Sync_Admin( $this->get_plugin_name(), $this->get_version() );
+		$store_sync = new Compustore_Data_Sync_Store( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-//		$this->loader->add_action( 'tgmpa_register', $plugin_admin, 'compustore_data_sync_register_required_plugins' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
-		$this->loader->add_action( 'wp_ajax_compu_map_sync_action', $plugin_admin, 'compu_map_sync_callback' );
-		$this->loader->add_action( 'wp_ajax_nopriv_compu_map_sync_action', $plugin_admin, 'compu_map_sync_callback' );
+		$this->loader->add_action( 'wp_ajax_compu_map_sync_action', $store_sync, 'compu_map_sync_callback' );
+		$this->loader->add_action( 'wp_ajax_nopriv_compu_map_sync_action', $store_sync, 'compu_map_sync_callback' );
 
 	}
 

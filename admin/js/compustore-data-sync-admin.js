@@ -1,15 +1,13 @@
 (function ($) {
     'use strict';
-
-
     jQuery(document).ready(function ($) {
         $('#compu_store_sync_form').submit(function (e) {
             e.preventDefault();
 
             // Get form data
             let form_data = $(this).serialize();
-let compu_map_sync_message = $('#compu_map_message')
-            compu_map_sync_message.textContent =''
+            let compu_map_sync_message = $('#compu_map_message')
+            compu_map_sync_message.textContent = ''
             // Send form data via AJAX
             $.ajax({
                 type: 'POST',
@@ -19,14 +17,18 @@ let compu_map_sync_message = $('#compu_map_message')
                     _ajax_nonce: compu_map_sync.compu_msync_nonce,
                     form_data: form_data
                 },
-                beforeSend: function(response) {
+                beforeSend: function (response) {
+                    $('#compu_menu_sync').prop('disabled', true);
+                    $('#loading_div').show()
+                    compu_map_sync_message.html("Hang on tight. This process might take some time to finish 😒.........");
 
-                    compu_map_sync_message.html("Loading.........");
                 },
                 success: function (response) {
-                    // Handle response from server
-                    console.log(response.data);
+console.log(response)
                     compu_map_sync_message.html(response.data)
+                    $('#compu_menu_sync').prop('disabled', false);
+                    $('#loading_div').hide()
+
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr.responseText);

@@ -1,34 +1,44 @@
+<?php
+if ( ! current_user_can( 'manage_options' ) ) {
+	return;
+}
+//Get the active tab from the $_GET param
+$default_tab = null;
+$tab         = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : $default_tab;
+?>
 <div class="wrap">
-  <!-- Menu Sync Form -->
-  <form method="POST"  id="compu_store_sync_form">
-    <?php
-    $subsites = get_sites();
-    echo "<h2>From</h2>";
-    echo "<select name='compu_map_sync_from' id='compu_map_sync_from'>";
-    foreach ($subsites as $subsite) {
-      $subsite_id   = get_object_vars($subsite)[ "blog_id" ];
-      $subsite_name = get_blog_details($subsite_id) -> blogname;
-      ?>
-      <option
-          value='<?php echo $subsite_id ?>' <?php echo ( get_current_blog_id() == $subsite_id ) ? 'selected' : ''; ?> ><?php echo $subsite_name ?></option>
-      <?php
-    }
-    echo "</select>";
-    echo "<h2>To</h2>";
-    foreach ($subsites as $subsite) {
-      $subsite_id   = get_object_vars($subsite)[ "blog_id" ];
-      $subsite_name = get_blog_details($subsite_id) -> blogname;
-      if ( $subsite_id != get_current_blog_id() ) {
-        ?>
-        <input type="checkbox" id="compu_map_sync_all_sites<?php echo $subsite_id ?>" name="compu_map_sync_all_sites[]"
-               value="<?php echo $subsite_id ?>">
-        <label for="compu_map_sync_all_sites<?php echo $subsite_id ?>"> <?php echo $subsite_name ?></label>
-        <?php
-      }
-    }
-    submit_button('Sync Now', 'primary', 'menu_sync');
-    ?>
-  </form>
-<div id="compu_map_message"></div>
+  <nav class="nav-tab-wrapper">
+    <a href="?page=compu_settings" class="nav-tab <?php if ( $tab === null ): ?>nav-tab-active<?php endif; ?>">Compustore
+      stores sync</a>
+    <!--    <a href="?page=compu_settings&tab=settings" class="nav-tab -->
+	  <?php //if($tab==='settings'):?><!--nav-tab-active--><?php //endif; ?><!--">Settings</a>-->
+    <!--    <a href="?page=compu_settings&tab=tools" class="nav-tab --><?php //if($tab==='tools'):?><!--nav-tab-active-->
+	  <?php //endif; ?><!--">Tools</a>-->
+  </nav>
+
+  <div class="tab-content">
+	  <?php switch ( $tab ) :
+		  case 'menu':
+			  echo 'Menu';
+			  break;
+		  case 'slider':
+			  echo 'Slider';
+			  break;
+		  default:
+			  include_once plugin_dir_path( dirname( __FILE__ ) ) . "/partials/compustore-data-sync_menu_content.php";
+			  break;
+	  endswitch; ?>
+  </div>
+
+	<?php ?>
+
+<!--  <div id="loading_div">-->
+<!--    <div class="spinner-box">-->
+<!--      <div class="circle-border">-->
+<!--        <div class="circle-core"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+  <div id="compu_map_message"></div>
 </div>
 
